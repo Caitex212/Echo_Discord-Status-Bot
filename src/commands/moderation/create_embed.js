@@ -1,5 +1,6 @@
 const {  PermissionsBitField, MessageFlags } = require('discord.js');
 const { getServerStatus } = require('../../services/serverQuery');
+const createEmbed = require('../../utils/createEmbed');
 
 module.exports =  {
     name: 'create_embed',
@@ -15,7 +16,7 @@ module.exports =  {
             return;
         }
 
-        interaction.reply({content: 'Trying to reach server...', flags: [MessageFlags.Ephemeral]});
+        await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
         let serverStatus = null;
         try {
@@ -26,26 +27,10 @@ module.exports =  {
             return;
         }
 
-        try {
-            const { name, map, maxplayers, numplayers, players, ping, connect } = serverStatus;
-            const embed = {
-                title: `Server Status: ${name}`,
-                description: `Map: ${map}\nPlayers: ${numplayers}/${maxplayers}\nPing: ${ping}ms\nConnect: ${connect}`,
-                fields: players.length ? [
-                    {
-                        name: 'Current Players',
-                        value: players.map(p => p.name).join('\n')
-                    }
-                ] : [],
-                color: 0x00FF00,
-                timestamp: new Date()
-            };
-        } catch (error) {
-            console.error("Error creating embed:", error);
-            interaction.editReply({content: 'Error creating server status embed.'});
-            return;
+        if (!createEmbed(serverStatus, interaction)) {
+            interaction.editReply({content: 'Failed to create server status embed.'});
+        } else {
+            interaction.editReply({content: 'Server status embed created successfully.'});
         }
-
-        await interaction.channel.send({ embeds: [embed] });
     }
 }
