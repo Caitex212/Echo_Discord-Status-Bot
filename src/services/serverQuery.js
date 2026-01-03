@@ -1,10 +1,10 @@
 const { GameDig } = require('gamedig');
 
-async function getServerStatus() {
+async function getServerStatus(ip, port, type) {
     return await GameDig.query({
-        type: process.env.SERVER_TYPE,
-        host: process.env.SERVER_IP,
-        port: process.env.SERVER_PORT
+        type: type,
+        host: ip,
+        port: port
     });
 }
 

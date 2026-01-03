@@ -1,7 +1,7 @@
-module.exports = async (serverStatus, interaction) => {
+module.exports = async (serverStatus, ip, port, serverType) => {
     if (!serverStatus) return null;
 
-    if (process.env.SERVER_TYPE === 'ase') {
+    if (serverType === 'ase') {
         try {
             const {
                 name,
@@ -60,12 +60,11 @@ module.exports = async (serverStatus, interaction) => {
                 });
             }
 
-            const message = await interaction.channel.send({ embeds: [embed] });
-            return true;
+            return embed;
 
         } catch (error) {
             console.error('Error creating embed:', error);
-            return false;
+            return null;
         }
     }
 };
