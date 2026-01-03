@@ -12,14 +12,14 @@ module.exports =  {
 
     callback: async (client, interaction) => {
         const supportedServers = process.env.SUPPORTED_SERVERS ? process.env.SUPPORTED_SERVERS.split(',') : [];
-        if (!supportedServers.includes(process.env.SERVER_TYPE)) {
-            interaction.reply({content: `Server type ${process.env.SERVER_TYPE} is not supported yet.` , flags: [MessageFlags.Ephemeral]});
+        if (!supportedServers.includes(process.env.GSERVER_TYPE)) {
+            interaction.reply({content: `Server type ${process.env.GSERVER_TYPE} is not supported yet.` , flags: [MessageFlags.Ephemeral]});
             return;
         }
 
         await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
-        const { SERVER_IP: ip, SERVER_PORT: port, SERVER_TYPE: type } = process.env;
+        const { GSERVER_IP: ip, GSERVER_PORT: port, GSERVER_TYPE: type } = process.env;
 
         let serverStatus = null;
         try {
