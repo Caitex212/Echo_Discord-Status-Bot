@@ -19,8 +19,9 @@ module.exports = async (serverStatus, ip, port, serverType) => {
         };
     }
 
-    if (serverType === 'ase') {
-        try {
+    try {
+        if (serverType === 'ase') {
+        
             const {
                 name,
                 map,
@@ -79,10 +80,9 @@ module.exports = async (serverStatus, ip, port, serverType) => {
             }
 
             return embed;
-
-        } catch (error) {
-            console.error('Error creating embed:', error);
-            return null;
         }
+    } catch (error) {
+        console.error('Error creating embed:', error);
+        return null;
     }
 };
