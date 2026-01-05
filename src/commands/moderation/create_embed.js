@@ -28,7 +28,8 @@ module.exports =  {
             required: true,
             type: ApplicationCommandOptionType.String,
             choices: [
-                { name: 'ARK: Survival Evolved', value: 'ase' }
+                { name: 'ARK: Survival Evolved', value: 'ase' },
+                { name: 'Minecraft Java Edition', value: 'minecraft' }
             ]
         }
     ],
