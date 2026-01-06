@@ -27,12 +27,15 @@ module.exports =  {
             interaction.editReply({content: 'No tracked server found with the provided message ID.', flags: [MessageFlags.Ephemeral]});
             return;
         }
+        try {
+            const channel = await client.channels.fetch(trackedServer.channel_id);
+            const message = await channel.messages.fetch(messageId);
 
-        const channel = await client.channels.fetch(trackedServer.channel_id);
-        const message = await channel.messages.fetch(messageId);
-
-        if (message) {
-            await message.delete();
+            if (message) {
+                await message.delete();
+            }
+        } catch (error) {
+            console.error(`Error deleting message with ID ${messageId}:`, error);
         }
 
         db.prepare('DELETE FROM tracked_servers WHERE message_id = ?').run(messageId);
