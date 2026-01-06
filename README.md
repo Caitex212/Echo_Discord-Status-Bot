@@ -85,7 +85,6 @@ Create a server status embed in the current channel.
 * `port` – Server port
 * `type` – Game type (autocomplete)
 
----
 
 ### `/delete_embed`
 
