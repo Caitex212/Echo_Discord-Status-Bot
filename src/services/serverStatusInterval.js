@@ -34,5 +34,5 @@ async function updateEmbeds(client) {
 
 module.exports = (client) => {
     updateEmbeds(client); 
-    setInterval(() => updateEmbeds(client), 60 * 1000);
+    setInterval(() => updateEmbeds(client), process.env.SERVER_STATUS_UPDATE_INTERVAL * 60 * 1000);
 };
