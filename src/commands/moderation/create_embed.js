@@ -2,6 +2,7 @@ const {  PermissionsBitField, MessageFlags, ApplicationCommandOptionType } = req
 const { getServerStatus } = require('../../services/serverQuery');
 const createEmbed = require('../../utils/createEmbed');
 const db = require('../../utils/db');
+const GAME_LIST = require('../../utils/GAME_LIST');
 
 module.exports =  {
     name: 'create_embed',
@@ -27,10 +28,7 @@ module.exports =  {
             description: 'The game type the server is running.',
             required: true,
             type: ApplicationCommandOptionType.String,
-            choices: [
-                { name: 'ARK: Survival Evolved', value: 'ase' },
-                { name: 'Minecraft Java Edition', value: 'minecraft' }
-            ]
+            autocomplete: true
         }
     ],
 
@@ -39,9 +37,8 @@ module.exports =  {
         const port = interaction.options.getInteger('port');
         const type = interaction.options.getString('type');
 
-        const supportedServers = process.env.SUPPORTED_SERVERS ? process.env.SUPPORTED_SERVERS.split(',') : [];
-        if (!supportedServers.includes(type)) {
-            interaction.reply({content: `Server type ${type} is not supported yet.` , flags: [MessageFlags.Ephemeral]});
+        if (!GAME_LIST.some(g => g.value === type)) {
+            interaction.reply({content: 'Invalid game type.', flags: [MessageFlags.Ephemeral]});
             return;
         }
 

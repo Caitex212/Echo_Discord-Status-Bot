@@ -20,121 +20,71 @@ module.exports = async (serverStatus, ip, port, serverType) => {
     }
 
     try {
-        if (serverType === 'ase') {
-        
-            const {
-                name,
-                map,
-                maxplayers,
-                numplayers,
-                players = [],
-                ping,
-                connect
-            } = serverStatus;
+        const {
+            name,
+            map,
+            maxplayers,
+            numplayers,
+            players = [],
+            ping,
+            connect,
+            version
+        } = serverStatus;
 
-            const embed = {
-                title: `🟢 ${name}`,
-                description: `**Server is online and responding**`,
-                color: 0x2ECC71,
-                fields: [
-                    {
-                        name: '🗺️ Map',
-                        value: map || 'Unknown',
-                        inline: true
-                    },
-                    {
-                        name: '👥 Players',
-                        value: `${numplayers}/${maxplayers}`,
-                        inline: true
-                    },
-                    {
-                        name: '📡 Ping',
-                        value: `${ping} ms`,
-                        inline: true
-                    },
-                    {
-                        name: '🔗 Connect',
-                        value: `\`${connect}\``,
-                        inline: false
-                    }
-                ],
-                footer: {
-                    text: 'Live server status'
+        const embed = {
+            title: `🟢 ${name || 'Unknown Server'}`,
+            description: `**Server is online and responding**`,
+            color: 0x2ECC71,
+            fields: [
+                {
+                    name: '🌐 Address',
+                    value: `${ip}:${port}`,
+                    inline: false
                 },
-                timestamp: new Date()
-            };
+                ...(map ? [{
+                    name: '🗺️ Map',
+                    value: map,
+                    inline: true
+                }] : []),
+                ...(version ? [{
+                    name: '🗺️ Version',
+                    value: version,
+                    inline: true
+                }] : []),
+                ...((numplayers !== undefined && maxplayers !== undefined) ? [{
+                    name: '👥 Players',
+                    value: `${numplayers}/${maxplayers}`,
+                    inline: true
+                }] : []),
+                ...(ping ? [{
+                    name: '📡 Ping',
+                    value: `${ping} ms`,
+                    inline: true
+                }] : []),
+                ...(connect ? [{
+                    name: '🔗 Connect',
+                    value: `\`${connect}\``,
+                    inline: false
+                }] : [])
+            ],
+            footer: {
+                text: 'Live server status'
+            },
+            timestamp: new Date()
+        };
 
-            if (players.length > 0) {
-                embed.fields.push({
-                    name: `🎮 Current Players (${players.length})`,
-                    value: players
-                        .map(p => `• ${p.name || 'Unknown Player'}`)
-                        .join('\n')
-                        .slice(0, 1024) // Discord field safety
-                });
-            } else {
-                embed.fields.push({
-                    name: '🎮 Current Players',
-                    value: '_No players online_'
-                });
-            }
-
-            return embed;
-        } else if (serverType === 'minecraft') {
-            const {
-                name,
-                version,
-                maxplayers,
-                numplayers,
-                players = [],
-                ping,
-                connect
-            } = serverStatus;
-
-            const embed = {
-                title: `🟢 ${name}`,
-                description: `**Server is online and responding**`,
-                color: 0x2ECC71,
-                fields: [
-                    {
-                        name: '🗺️ Version',
-                        value: version || 'Unknown',
-                        inline: true
-                    },
-                    {
-                        name: '👥 Players',
-                        value: `${numplayers}/${maxplayers}`,
-                        inline: true
-                    },
-                    {
-                        name: '📡 Ping',
-                        value: `${ping} ms`,
-                        inline: true
-                    },
-                    {
-                        name: '🔗 Connect',
-                        value: `\`${connect}\``,
-                        inline: false
-                    }
-                ],
-                footer: {
-                    text: 'Live server status'
-                },
-                timestamp: new Date()
-            };
-
-            if (players.length > 0) {
-                embed.fields.push({
-                    name: `🎮 Current Players (${players.length})`,
-                    value: players
-                        .map(p => `• ${p.name || 'Unknown Player'}`)
-                        .join('\n')
-                        .slice(0, 1024) // Discord field safety
-                });
-            }
-
-            return embed;
+        if (players.length > 0) {
+            embed.fields.push({
+                name: `🎮 Current Players (${players.length})`,
+                value: players
+                    .map(p => `• ${p.name || 'Unknown Player'}`)
+                    .join('\n')
+                    .slice(0, 1024) // Discord field safety
+            });
         }
+
+        return embed;
+        
     } catch (error) {
         console.error('Error creating embed:', error);
         return null;
